@@ -731,11 +731,17 @@
     }
 
     // 随机决策
-    async function makeDecision(moduleType) {
-      return await callAPI(`${API_BASE_URL}/api/random_decision`, {
-        method: 'POST',
-        body: JSON.stringify({ module_type: moduleType })
-      });
+    async function makeDecision(moduleType = 'general') {
+      console.log("🔍 [前端] makeDecision调用，参数:", moduleType);
+      console.log("🔍 [前端] 发送的数据:", { module_type: moduleType });
+        console.log('🔍 makeDecision调用，参数:', moduleType);
+
+        return await callAPI(`${API_BASE_URL}/api/random_decision`, {
+            method: 'POST',
+            body: JSON.stringify({
+                module_type: moduleType  // 确保字段名正确
+            })
+        });
     }
 
     // 获取用户偏好
