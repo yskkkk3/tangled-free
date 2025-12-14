@@ -629,14 +629,14 @@
     const GITHUB_PAGES_URL = 'https://yskkkk3.github.io/tangled-free';  // GitHub用户名
 
     // 所有fetch请求需要：
-    fetch(API_BASE_URL + '/api/login', {
-        method: 'POST',
-        credentials: 'include',  // 必须！用于传递cookies/session
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
+    // fetch(API_BASE_URL + '/api/login', {
+    //     method: 'POST',
+    //     credentials: 'include',  // 必须！用于传递cookies/session
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(data)
+    // });
     let CURRENT_USER_ID = 'guest_' + Math.random().toString(36).substr(2, 9);
     let isLoggedIn = false;
     let currentUser = null;
