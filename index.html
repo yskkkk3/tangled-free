@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>纠结拜拜~~</title>
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    // 配置Tailwind自定义颜色
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#ff6b8b',
+            secondary: '#41b3ff',
+            accent: '#7b61ff',
+            light: '#fff5f8',
+            dark: '#4a4a4a'
+          },
+          fontFamily: {
+            fun: ['"Comic Sans MS"', '"Marker Felt"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .bounce-hover {
+        transition: transform 0.3s ease;
+      }
+      .bounce-hover:hover {
+        transform: translateY(-5px);
+      }
+      .wiggle {
+        animation: wiggle 2s ease-in-out infinite;
+      }
+      @keyframes wiggle {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+      }
+      .float {
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-light font-fun text-dark min-h-screen">
+  <!-- 顶部导航栏 -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fas fa-magic text-primary text-xl wiggle"></i>
+        <span class="text-xl font-bold text-primary">纠结拜拜~~</span>
+      </div>
+      <div class="text-sm text-gray-500" id="connectionStatus">
+        <i class="fas fa-circle text-gray-300 mr-1"></i> 连接中...
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="pb-20">
+    <!-- 首页 -->
+    <section id="home" class="page px-4 py-6">
+      <div class="text-center mb-8">
+        <h1 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-primary mb-4">
+          选择困难症？<br>不存在的！
+        </h1>
+        <p class="text-gray-600 mb-6">
+          纠结今天吃什么？去哪儿浪？<br>
+          交给我，一秒帮你做决定！
+        </p>
+        <div class="relative w-40 h-40 mx-auto mb-6">
+          <img src="https://gaoimg.com/wp-content/uploads/2023/03/223172073f32bf5f-1.jpg" alt="做决定的小助手" class="rounded-full object-cover w-full h-full border-4 border-primary float">
+          <div class="absolute -top-2 -right-2 bg-secondary text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold">
+            速解
+          </div>
+        </div>
+      </div>
+      
+      <!-- 功能卡片 -->
+      <div class="grid grid-cols-1 gap-5 mb-8">
+        <div class="bg-white rounded-2xl shadow-md p-6 bounce-hover">
+          <div class="w-14 h-14 bg-pink-100 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-th-large text-primary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-dark">选场景 & 设选项</h3>
+          <p class="text-gray-600 mb-4">选择场景并管理你的纠结选项</p>
+          <button class="nav-button block w-full text-center bg-primary hover:bg-primary/90 text-white py-3 rounded-xl transition-all" data-target="modules">
+            开始设置 <i class="fas fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-md p-6 bounce-hover">
+          <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-sliders-h text-secondary text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-dark">调调你的偏好</h3>
+          <p class="text-gray-600 mb-4">告诉本助手你更倾向于啥~</p>
+          <button class="nav-button block w-full text-center bg-secondary hover:bg-secondary/90 text-white py-3 rounded-xl transition-all" data-target="weights">
+            调偏好 <i class="fas fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-md p-6 bounce-hover">
+          <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-random text-accent text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-dark">生成答案！</h3>
+          <p class="text-gray-600 mb-4">万事俱备，让我帮你做决定~</p>
+          <button id="startDecisionBtn" class="w-full text-center bg-accent hover:bg-accent/90 text-white py-3 rounded-xl transition-all pulse" disabled>
+            帮我选！ <i class="fas fa-bolt ml-1"></i>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6 bounce-hover">
+          <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-history text-green-500 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-dark">看看历史</h3>
+          <p class="text-gray-600 mb-4">回顾一下你之前的纠结记录~</p>
+          <button class="nav-button block w-full text-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl transition-all" data-target="history">
+            看历史 <i class="fas fa-history ml-1"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 用户信息栏 -->
+      <div class="bg-white rounded-2xl p-5 border border-gray-100 mb-6">
+        <!-- 登录后显示的用户信息 -->
+        <div id="userInfo" class="hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3">
+                <span id="userAvatar">U</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-dark" id="welcomeText">欢迎，用户！</h4>
+                <p class="text-gray-600 text-sm" id="userEmail">加载中...</p>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="logout()" class="text-gray-500 hover:text-gray-700 text-sm">
+                <i class="fas fa-sign-out-alt mr-1"></i>退出
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 未登录时显示的访客信息 -->
+        <div id="guestInfo">
+          <div class="text-center">
+            <p class="text-gray-600 mb-3">登录后可以保存你的偏好和历史记录</p>
+            <button onclick="showAuthModal()" class="bg-primary hover:bg-primary/90 text-white py-2 px-6 rounded-xl transition-all">
+              <i class="fas fa-user mr-2"></i>登录/注册
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 调试信息 -->
+      <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-bug text-yellow-500 mr-3"></i>
+          <div>
+            <h4 class="font-bold text-yellow-800 text-sm">调试信息</h4>
+            <p class="text-yellow-700 text-xs">用户ID: <span id="debugUserId">未登录</span></p>
+            <p class="text-yellow-700 text-xs">登录状态: <span id="debugAuthStatus">未登录</span></p>
+            <button onclick="testAllAPIs()" class="mt-2 bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded text-xs">
+              测试所有API
+            </button>
+            <button onclick="checkAuth()" class="mt-1 bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs">
+              检查登录状态
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 场景选择页面 -->
+    <section id="modules" class="page px-4 py-6 hidden">
+      <div class="mb-6">
+        <button class="nav-button inline-flex items-center text-secondary mb-4" data-target="home">
+          <i class="fas fa-arrow-left mr-2"></i> 返回首页
+        </button>
+        <h2 class="text-2xl font-bold text-dark mb-2">选个纠结场景吧~</h2>
+        <p class="text-gray-600">今天想解决哪个方面的选择困难？</p>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-5">
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden bounce-hover module-card" data-module="study">
+          <div class="h-40 overflow-hidden">
+            <img src="https://picsum.photos/id/20/600/400" alt="学习场景" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+          </div>
+          <div class="p-5">
+            <div class="flex items-center mb-3">
+              <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-book text-primary"></i>
+              </div>
+              <h3 class="text-xl font-bold text-dark">学习纠结症</h3>
+            </div>
+            <p class="text-gray-600 mb-4">不知道学啥？去哪儿自习？选哪门课？</p>
+            <button class="select-module-btn w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-xl transition-all">
+              就它了！
+            </button>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden bounce-hover module-card" data-module="life">
+          <div class="h-40 overflow-hidden">
+            <img src="https://picsum.photos/id/42/600/400" alt="生活场景" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+          </div>
+          <div class="p-5">
+            <div class="flex items-center mb-3">
+              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-utensils text-secondary"></i>
+              </div>
+              <h3 class="text-xl font-bold text-dark">干饭&生活</h3>
+            </div>
+            <p class="text-gray-600 mb-4">今天吃啥？去哪儿吃？穿啥出门？</p>
+            <button class="select-module-btn w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-xl transition-all">
+              就它了！
+            </button>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden bounce-hover module-card" data-module="activity">
+          <div class="h-40 overflow-hidden">
+            <img src="https://picsum.photos/id/96/600/400" alt="活动场景" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+          </div>
+          <div class="p-5">
+            <div class="flex items-center mb-3">
+              <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-gamepad text-accent"></i>
+              </div>
+              <h3 class="text-xl font-bold text-dark">玩耍&活动</h3>
+            </div>
+            <p class="text-gray-600 mb-4">去哪儿浪？参加啥活动？和谁玩？</p>
+            <button class="select-module-btn w-full bg-accent hover:bg-accent/90 text-white py-3 rounded-xl transition-all">
+              就它了！
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div id="moduleSelectedAlert" class="mt-6 p-4 rounded-xl bg-green-50 border border-green-200 hidden">
+        <div class="flex items-center">
+          <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+          <div>
+            <h4 class="font-bold text-green-800">选好啦！</h4>
+            <p class="text-green-700 text-sm" id="moduleSelectedText">正在加载选项...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 选项管理入口 -->
+      <div class="mt-6 bg-white rounded-2xl shadow-md p-5">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-edit text-green-500 text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-dark">想自己设置选项？</h3>
+            <p class="text-gray-600 text-sm">完全自定义你的纠结选项</p>
+          </div>
+        </div>
+        <button id="manageOptionsBtn" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl transition-all">
+          <i class="fas fa-sliders-h mr-2"></i>管理选项
+        </button>
+      </div>
+    </section>
+
+    <!-- 选项管理页面 -->
+    <section id="options" class="page px-4 py-6 hidden">
+      <div class="mb-6">
+        <button class="nav-button inline-flex items-center text-secondary mb-4" data-target="modules">
+          <i class="fas fa-arrow-left mr-2"></i> 返回场景
+        </button>
+        <h2 class="text-2xl font-bold text-dark mb-2">管理你的选项~</h2>
+        <p class="text-gray-600">添加、编辑、删除你的纠结选项</p>
+      </div>
+
+      <!-- 当前场景提示 -->
+      <div id="currentModuleInfo" class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-info-circle text-blue-500 mr-3 text-xl"></i>
+          <div>
+            <h4 class="font-bold text-blue-800">当前场景</h4>
+            <p class="text-blue-700 text-sm" id="currentModuleName">请先选择场景</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 添加选项表单 -->
+      <div class="bg-white rounded-2xl shadow-md p-5 mb-6">
+        <h3 class="text-xl font-bold text-dark mb-4">添加新选项</h3>
+        <div class="flex space-x-3">
+          <input type="text" id="newOptionInput" 
+                 class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-primary"
+                 placeholder="输入你的纠结选项...">
+          <button id="addOptionBtn" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl transition-all">
+            <i class="fas fa-plus mr-2"></i>添加
+          </button>
+        </div>
+        <p class="text-gray-500 text-sm mt-2">例如：去图书馆自习、点外卖、看电影...</p>
+      </div>
+
+      <!-- 选项列表 -->
+      <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+        <div class="p-5 border-b border-gray-100">
+          <h3 class="text-xl font-bold text-dark">我的选项列表</h3>
+          <p class="text-gray-600 text-sm">点击选项可以删除哦~</p>
+        </div>
+        
+        <!-- 空状态 -->
+        <div id="noOptions" class="p-8 text-center">
+          <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-plus-circle text-gray-400 text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-dark mb-2">还没有选项哦</h3>
+          <p class="text-gray-500 mb-4">在上面添加你的第一个纠结选项吧！</p>
+        </div>
+
+        <!-- 选项列表 -->
+        <div id="optionsList" class="divide-y divide-gray-100 hidden">
+          <!-- 选项会动态生成在这里 -->
+        </div>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="mt-6 grid grid-cols-2 gap-4">
+        <button id="clearAllOptions" class="bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl transition-all">
+          <i class="fas fa-trash mr-2"></i>清空选项
+        </button>
+        <button class="nav-button bg-secondary hover:bg-secondary/90 text-white py-3 rounded-xl transition-all" data-target="home">
+          <i class="fas fa-check mr-2"></i>完成
+        </button>
+      </div>
+    </section>
+
+    <!-- 偏好调整页面 -->
+    <section id="weights" class="page px-4 py-6 hidden">
+      <div class="mb-6">
+        <button class="nav-button inline-flex items-center text-secondary mb-4" data-target="home">
+          <i class="fas fa-arrow-left mr-2"></i> 返回首页
+        </button>
+        <h2 class="text-2xl font-bold text-dark mb-2">调调你的小心思~</h2>
+        <p class="text-gray-600">拖动滑块，告诉本助手你更偏爱啥</p>
+      </div>
+      
+      <div id="noModuleSelected" class="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 mb-6">
+        <div class="flex">
+          <i class="fas fa-exclamation-triangle text-yellow-500 mt-1 mr-3 text-xl"></i>
+          <div>
+            <h3 class="font-bold text-yellow-800">还没选场景哦</h3>
+            <button class="nav-button text-yellow-600 underline font-bold mt-1" data-target="modules">选个场景</button>
+            <p class="text-yellow-700 text-sm">吧，不然我咋知道你纠结啥~</p>
+          </div>
+        </div>
+      </div>
+      
+      <div id="weightAdjustmentForm" class="bg-white rounded-2xl shadow-md p-5 hidden mb-6">
+        <div class="mb-5">
+          <h3 class="text-xl font-bold text-dark mb-2">当前纠结：<span id="currentModuleDisplay">学习纠结症</span></h3>
+          <p class="text-gray-600 text-sm">拖动下面的滑块，调整你的偏好程度（总和要等于100哦）</p>
+        </div>
+        
+        <div id="weightSliders" class="space-y-6 mb-6">
+          <!-- 权重滑块会动态生成 -->
+        </div>
+        
+        <div class="pt-5 border-t border-gray-100">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-bold text-dark">总偏好值</span>
+            <span id="totalWeight" class="font-bold text-primary text-lg">100</span>
+          </div>
+          <button id="saveWeightsBtn" class="w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-xl transition-all">
+            保存我的偏好 <i class="fas fa-heart ml-1"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div id="weightsSavedAlert" class="mt-6 p-4 rounded-xl bg-green-50 border border-green-200 hidden">
+        <div class="flex items-center">
+          <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+          <div>
+            <h4 class="font-bold text-green-800">偏好保存好啦！</h4>
+            <p class="text-green-700 text-sm">快去首页让我帮你做决定吧~</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 历史记录页面 -->
+    <section id="history" class="page px-4 py-6 hidden">
+      <div class="mb-6">
+        <button class="nav-button inline-flex items-center text-secondary mb-4" data-target="home">
+          <i class="fas fa-arrow-left mr-2"></i> 返回首页
+        </button>
+        <h2 class="text-2xl font-bold text-dark mb-2">你的纠结历史~</h2>
+        <p class="text-gray-600">看看以前都纠结过啥</p>
+      </div>
+      
+      <!-- 历史记录筛选 -->
+      <div class="bg-white rounded-2xl shadow-md p-4 mb-6">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-dark">筛选记录</h3>
+          <div class="flex space-x-2">
+            <select id="historyFilter" class="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-primary">
+              <option value="all">全部场景</option>
+              <option value="study">学习纠结症</option>
+              <option value="life">干饭&生活</option>
+              <option value="activity">玩耍&活动</option>
+            </select>
+            <button onclick="refreshHistory()" class="text-sm bg-primary hover:bg-primary/90 text-white px-3 py-1 rounded-lg transition-all">
+              <i class="fas fa-sync-alt mr-1"></i>刷新
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div id="historyContainer" class="bg-white rounded-2xl shadow-md overflow-hidden">
+        <!-- 未登录提示 -->
+        <div id="notLoggedIn" class="p-8 text-center hidden">
+          <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-user-lock text-gray-400 text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-dark mb-2">请先登录</h3>
+          <p class="text-gray-500 mb-6">登录后可以查看和保存你的纠结历史记录</p>
+          <button onclick="showAuthModal()" class="bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-xl transition-all">
+            <i class="fas fa-user mr-2"></i>立即登录
+          </button>
+        </div>
+        
+        <!-- 空历史提示 -->
+        <div id="noHistory" class="p-8 text-center">
+          <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-history text-gray-400 text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-dark mb-2">还没有纠结记录哦</h3>
+          <p class="text-gray-500 mb-6">快去首页解决你的第一个纠结吧~</p>
+          <button class="nav-button inline-block bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-xl transition-all" data-target="home">
+            开始纠结 <i class="fas fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+        
+        <!-- 历史记录列表 -->
+        <div id="historyList" class="divide-y divide-gray-100 hidden">
+          <!-- 历史记录会动态生成 -->
+        </div>
+        
+        <!-- 加载状态 -->
+        <div id="historyLoading" class="p-8 text-center hidden">
+          <div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p class="text-gray-500">正在加载历史记录...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 结果详情页面 -->
+    <section id="detailPage" class="page px-4 py-6 hidden">
+      <div class="mb-6">
+        <button class="nav-button inline-flex items-center text-secondary mb-4" data-target="home">
+          <i class="fas fa-arrow-left mr-2"></i> 返回首页
+        </button>
+        <h2 class="text-2xl font-bold text-dark mb-2">决定就是它啦！</h2>
+        <p class="text-gray-600">根据你的纠结，我帮你选了这个~</p>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-6">
+        <!-- 详情图片 -->
+        <div class="h-56 overflow-hidden">
+          <img id="detailImage" src="https://picsum.photos/id/292/600/400" alt="决策详情图片" class="w-full h-full object-cover">
+        </div>
+        
+        <!-- 详情内容 -->
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <span id="detailCategory" class="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full font-bold">
+              学习纠结症
+            </span>
+            <span id="detailDate" class="text-xs text-gray-500">
+              今天 14:30
+            </span>
+          </div>
+          
+          <h3 id="detailTitle" class="text-2xl font-bold text-dark mb-4">
+            加载中...
+          </h3>
+          
+          <div id="detailDescription" class="text-gray-600 mb-6 leading-relaxed">
+            正在为你生成最佳选择...
+          </div>
+          
+          <div class="bg-gray-50 p-4 rounded-xl mb-6">
+            <h4 class="font-bold text-dark mb-2 flex items-center">
+              <i class="fas fa-lightbulb text-yellow-500 mr-2"></i> 小建议
+            </h4>
+            <p id="detailTip" class="text-gray-600 text-sm">
+              请稍等，正在加载建议...
+            </p>
+          </div>
+          
+          <div class="flex space-x-3">
+            <button id="anotherDecisionBtn" class="flex-1 bg-accent hover:bg-accent/90 text-white py-3 rounded-xl transition-all">
+              再选一个 <i class="fas fa-sync-alt ml-1"></i>
+            </button>
+            <button id="shareBtn" class="w-12 h-12 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl flex items-center justify-center transition-all">
+              <i class="fas fa-share-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 相关推荐 -->
+      <div class="mb-6">
+        <h3 class="text-xl font-bold text-dark mb-4">你可能还纠结这些</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white rounded-xl shadow-md overflow-hidden bounce-hover">
+            <img src="https://picsum.photos/id/43/300/200" alt="相关推荐1" class="w-full h-32 object-cover">
+            <div class="p-3">
+              <h4 class="font-bold text-dark text-sm">自习必备零食</h4>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-md overflow-hidden bounce-hover">
+            <img src="https://picsum.photos/id/48/300/200" alt="相关推荐2" class="w-full h-32 object-cover">
+            <div class="p-3">
+              <h4 class="font-bold text-dark text-sm">高效学习法</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 决策加载模态框 -->
+  <div id="loadingModal" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50 hidden">
+    <div class="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6"></div>
+    <h3 class="text-xl font-bold text-primary">正在帮你做决定...</h3>
+    <p class="text-gray-500 mt-2">别着急，好选择值得等待~</p>
+  </div>
+
+  <!-- 登录注册模态框 -->
+  <div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl p-6 w-96 mx-4">
+      <!-- 登录表单 -->
+      <div id="loginForm">
+        <h3 class="text-2xl font-bold text-primary mb-6 text-center">欢迎回来！</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2">用户名</label>
+            <input type="text" id="loginUsername" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="请输入用户名">
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2">密码</label>
+            <input type="password" id="loginPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="请输入密码">
+          </div>
+          <button onclick="login()" class="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-xl transition-all">
+            登录 <i class="fas fa-sign-in-alt ml-1"></i>
+          </button>
+          <div class="text-center">
+            <span class="text-gray-600">还没有账号？</span>
+            <button onclick="showRegisterForm()" class="text-secondary hover:underline font-bold">立即注册</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 注册表单 -->
+      <div id="registerForm" class="hidden">
+        <h3 class="text-2xl font-bold text-primary mb-6 text-center">加入纠结拜拜</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2">用户名</label>
+            <input type="text" id="registerUsername" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="请输入用户名">
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2">邮箱</label>
+            <input type="email" id="registerEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="请输入邮箱">
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2">密码</label>
+            <input type="password" id="registerPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="至少6位密码">
+            <p class="text-xs text-gray-500 mt-1">至少6位字符</p>
+          </div>
+          <button onclick="register()" class="w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-xl transition-all">
+            注册 <i class="fas fa-user-plus ml-1"></i>
+          </button>
+          <div class="text-center">
+            <span class="text-gray-600">已有账号？</span>
+            <button onclick="showLoginForm()" class="text-secondary hover:underline font-bold">立即登录</button>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="hideAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 临时消息提示 -->
+  <div id="tempMessage" class="fixed top-4 right-4 px-6 py-3 rounded-xl shadow-lg z-50 transition-transform transform translate-x-full hidden"></div>
+
+  <script>
+    // ==================== 配置和全局变量 ====================
+    const API_BASE_URL = 'http://127.0.0.1:5001';
+    let CURRENT_USER_ID = 'guest_' + Math.random().toString(36).substr(2, 9);
+    let isLoggedIn = false;
+    let currentUser = null;
+
+    let selectedModule = null;
+    let userWeights = {};
+    let decisionHistory = [];
+    let currentOptions = [];
+    let isManagingOptions = false;
+
+    // ==================== 认证功能 ====================
+
+    // 显示认证模态框
+    function showAuthModal() {
+      document.getElementById('authModal').classList.remove('hidden');
+      showLoginForm();
+    }
+
+    // 隐藏认证模态框
+    function hideAuthModal() {
+      document.getElementById('authModal').classList.add('hidden');
+    }
+
+    // 显示登录表单
+    function showLoginForm() {
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+    }
+
+    // 显示注册表单
+    function showRegisterForm() {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.remove('hidden');
+    }
+
+    // ==================== API 调用函数 ====================
+
+    // 通用的API调用函数
+    async function callAPI(url, options = {}) {
+      try {
+        console.log('📡 API调用:', url, options.method || 'GET');
+        
+        const defaultOptions = {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+          }
+        };
+        
+        const response = await fetch(url, { ...defaultOptions, ...options });
+        
+        console.log('📡 API响应状态:', response.status, response.statusText);
+        
+        // 处理非JSON响应
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('服务器返回了非JSON响应');
+        }
+        
+        const result = await response.json();
+        console.log('✅ API调用结果:', result);
+        return result;
+        
+      } catch (error) {
+        console.error('❌ API调用失败:', error);
+        return { 
+          status: 'error', 
+          msg: error.message || '网络错误，请检查后端服务是否运行' 
+        };
+      }
+    }
+
+    // 测试后端连接
+    async function testBackendConnection() {
+      const result = await callAPI(`${API_BASE_URL}/`);
+      if (result.status === 'success') {
+        document.getElementById('connectionStatus').innerHTML = '<i class="fas fa-circle text-green-500 mr-1"></i> 已连接';
+        return true;
+      } else {
+        document.getElementById('connectionStatus').innerHTML = '<i class="fas fa-circle text-red-500 mr-1"></i> 连接失败';
+        return false;
+      }
+    }
+
+    // 添加选项
+    async function addOptionsToBackend(options, moduleType) {
+      return await callAPI(`${API_BASE_URL}/api/add_options`, {
+        method: 'POST',
+        body: JSON.stringify({ options: options, module_type: moduleType })
+      });
+    }
+
+    // 随机决策
+    async function makeDecision(moduleType) {
+      return await callAPI(`${API_BASE_URL}/api/random_decision`, {
+        method: 'POST',
+        body: JSON.stringify({ module_type: moduleType })
+      });
+    }
+
+    // 获取用户偏好
+    async function getUserPreferences(moduleType) {
+      return await callAPI(`${API_BASE_URL}/api/get_preferences/${moduleType}`, {
+        method: 'GET'
+      });
+    }
+
+    // 保存用户偏好
+    async function saveUserPreferences(moduleType, preferences) {
+      return await callAPI(`${API_BASE_URL}/api/save_preferences/${moduleType}`, {
+        method: 'POST',
+        body: JSON.stringify({ preferences: preferences })
+      });
+    }
+
+    // 获取用户选项
+    async function getOptions(moduleType) {
+      return await callAPI(`${API_BASE_URL}/api/get_options/${moduleType}`, {
+        method: 'GET'
+      });
+    }
+
+    // 更新用户选项
+    async function updateOptions(moduleType, options) {
+      return await callAPI(`${API_BASE_URL}/api/update_options`, {
+        method: 'POST',
+        body: JSON.stringify({ module_type: moduleType, options: options })
+      });
+    }
+
+    // 获取用户历史记录
+    async function getUserHistory() {
+      if (!isLoggedIn || !currentUser) {
+        showNotLoggedIn();
+        return [];
+      }
+      
+      try {
+        const result = await callAPI(`${API_BASE_URL}/api/history/${currentUser.id}`, {
+          method: 'GET'
+        });
+        
+        if (result.status === 'success') {
+          return result.history || [];
+        } else {
+          console.error('获取历史记录失败:', result.msg);
+          return [];
+        }
+      } catch (error) {
+        console.error('获取历史记录错误:', error);
+        return [];
+      }
+    }
+
+    // 检查登录状态
+    async function checkAuth() {
+      const result = await callAPI(`${API_BASE_URL}/api/check_auth`, {
+        method: 'GET'
+      });
+      
+      if (result.status === 'success' && result.is_logged_in) {
+        isLoggedIn = true;
+        currentUser = result.user;
+        updateUserInterface(result.user);
+      } else {
+        isLoggedIn = false;
+        currentUser = null;
+        updateUserInterface(null);
+      }
+      return result;
+    }
+
+    // 登录函数
+    async function login() {
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      if (!username || !password) {
+        alert('请填写用户名和密码');
+        return;
+      }
+      
+      const result = await callAPI(`${API_BASE_URL}/api/login`, {
+        method: 'POST',
+        body: JSON.stringify({ username, password })
+      });
+      
+      if (result.status === 'success') {
+        hideAuthModal();
+        isLoggedIn = true;
+        currentUser = result.user;
+        updateUserInterface(result.user);
+        alert('登录成功！');
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+      } else {
+        alert('登录失败：' + result.msg);
+      }
+    }
+
+    // 注册函数
+    async function register() {
+      const username = document.getElementById('registerUsername').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      
+      if (!username || !email || !password) {
+        alert('请填写完整信息');
+        return;
+      }
+      
+      if (password.length < 6) {
+        alert('密码至少6位');
+        return;
+      }
+      
+      const result = await callAPI(`${API_BASE_URL}/api/register`, {
+        method: 'POST',
+        body: JSON.stringify({ username, email, password })
+      });
+      
+      if (result.status === 'success') {
+        hideAuthModal();
+        isLoggedIn = true;
+        currentUser = result.user;
+        updateUserInterface(result.user);
+        alert('注册成功！');
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerEmail').value = '';
+        document.getElementById('registerPassword').value = '';
+      } else {
+        alert('注册失败：' + result.msg);
+      }
+    }
+
+    // 退出登录
+    async function logout() {
+      if (confirm('确定要退出登录吗？')) {
+        const result = await callAPI(`${API_BASE_URL}/api/logout`, {
+          method: 'POST'
+        });
+        
+        if (result.status === 'success') {
+          isLoggedIn = false;
+          currentUser = null;
+          updateUserInterface(null);
+          alert('已退出登录');
+        }
+      }
+    }
+
+    // 测试所有API
+    async function testAllAPIs() {
+      console.log('🧪 开始测试所有API...');
+      
+      if (!isLoggedIn) {
+        alert('请先登录再测试API');
+        return;
+      }
+      
+      try {
+        // 测试添加选项
+        console.log('1. 测试添加选项...');
+        const addResult = await addOptionsToBackend(['测试选项1', '测试选项2'], 'study');
+        console.log('添加选项结果:', addResult);
+        
+        // 测试保存偏好
+        console.log('2. 测试保存偏好...');
+        const saveResult = await saveUserPreferences('study', { test1: 50, test2: 50 });
+        console.log('保存偏好结果:', saveResult);
+        
+        // 测试获取偏好
+        console.log('3. 测试获取偏好...');
+        const getResult = await getUserPreferences('study');
+        console.log('获取偏好结果:', getResult);
+        
+        alert('测试完成！请查看控制台输出');
+      } catch (error) {
+        console.error('测试失败:', error);
+        alert('测试失败，请查看控制台错误信息');
+      }
+    }
+
+    // 更新用户界面
+    function updateUserInterface(user) {
+      const userInfo = document.getElementById('userInfo');
+      const guestInfo = document.getElementById('guestInfo');
+      const debugUserId = document.getElementById('debugUserId');
+      const debugAuthStatus = document.getElementById('debugAuthStatus');
+      
+      if (user) {
+        userInfo.classList.remove('hidden');
+        guestInfo.classList.add('hidden');
+        
+        document.getElementById('welcomeText').textContent = `欢迎，${user.username}！`;
+        document.getElementById('userEmail').textContent = user.email || '暂无邮箱';
+        document.getElementById('userAvatar').textContent = user.username.charAt(0).toUpperCase();
+        
+        // 更新调试信息
+        CURRENT_USER_ID = user.username;
+        debugUserId.textContent = user.username;
+        debugAuthStatus.textContent = '已登录';
+        debugAuthStatus.className = 'text-green-600';
+        
+        // 登录后自动刷新历史记录
+        if (document.getElementById('history').classList.contains('hidden') === false) {
+          updateHistoryPage();
+        }
+        
+      } else {
+        userInfo.classList.add('hidden');
+        guestInfo.classList.remove('hidden');
+        
+        // 使用随机用户ID
+        CURRENT_USER_ID = 'guest_' + Math.random().toString(36).substr(2, 9);
+        debugUserId.textContent = CURRENT_USER_ID;
+        debugAuthStatus.textContent = '未登录';
+        debugAuthStatus.className = 'text-red-600';
+        isLoggedIn = false;
+        
+        // 未登录时显示未登录提示
+        if (document.getElementById('history').classList.contains('hidden') === false) {
+          showNotLoggedIn();
+        }
+      }
+    }
+
+    // ==================== 页面功能函数 ====================
+
+    // 页面导航
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(pageId).classList.remove('hidden');
+      window.scrollTo(0, 0);
+      
+      // 如果导航到历史页面，更新历史记录
+      if (pageId === 'history') {
+        updateHistoryPage();
+      }
+    }
+
+    // 选择模块
+    async function selectModule(module) {
+      selectedModule = module;
+      
+      // 更新UI
+      document.querySelectorAll('.module-card').forEach(card => {
+        card.classList.toggle('ring-2', card.getAttribute('data-module') === module);
+        card.classList.toggle('ring-primary', card.getAttribute('data-module') === module);
+      });
+      
+      // 显示选择提示
+      const moduleNames = { study: "学习纠结症", life: "干饭&生活", activity: "玩耍&活动" };
+      document.getElementById('moduleSelectedText').textContent = `你选了${moduleNames[module]}，可以管理选项或使用示例选项~`;
+      document.getElementById('moduleSelectedAlert').classList.remove('hidden');
+      
+      // 加载该场景的选项
+      await loadCurrentOptions();
+      
+      // 如果没有选项，添加示例选项
+      if (currentOptions.length === 0) {
+        const sampleOptions = {
+          study: ['图书馆自习', '教室学习', '宿舍复习', '看网课', '做习题'],
+          life: ['食堂吃饭', '点外卖', '自己做饭', '校外餐厅', '方便面'],
+          activity: ['打篮球', '看电影', '玩游戏', '运动', '逛街']
+        };
+        
+        const result = await addOptionsToBackend(sampleOptions[module] || sampleOptions.study, module);
+        if (result.status === 'success') {
+          await loadCurrentOptions(); // 重新加载
+        }
+      }
+      
+      // 如果有选项，启用决策按钮
+      document.getElementById('startDecisionBtn').disabled = currentOptions.length < 2;
+      
+      setTimeout(() => document.getElementById('moduleSelectedAlert').classList.add('hidden'), 3000);
+      updateWeightPage();
+    }
+
+    // ==================== 选项管理功能 ====================
+
+    // 进入选项管理
+    function enterOptionsManagement() {
+      if (!selectedModule) {
+        alert('请先选择一个场景~');
+        return;
+      }
+      
+      isManagingOptions = true;
+      navigateTo('options');
+      updateOptionsPage();
+    }
+
+    // 更新选项管理页面
+    async function updateOptionsPage() {
+      const moduleNames = { study: "学习纠结症", life: "干饭&生活", activity: "玩耍&活动" };
+      document.getElementById('currentModuleName').textContent = moduleNames[selectedModule];
+      
+      // 加载当前选项
+      await loadCurrentOptions();
+      renderOptionsList();
+    }
+
+    // 加载当前选项
+    async function loadCurrentOptions() {
+      try {
+        const result = await getOptions(selectedModule);
+        
+        if (result.status === 'success') {
+          currentOptions = result.options || [];
+        } else {
+          currentOptions = [];
+        }
+      } catch (error) {
+        console.error('加载选项失败:', error);
+        currentOptions = [];
+      }
+    }
+
+    // 渲染选项列表
+    function renderOptionsList() {
+      const optionsList = document.getElementById('optionsList');
+      const noOptions = document.getElementById('noOptions');
+      
+      if (currentOptions.length === 0) {
+        optionsList.classList.add('hidden');
+        noOptions.classList.remove('hidden');
+        return;
+      }
+      
+      optionsList.classList.remove('hidden');
+      noOptions.classList.add('hidden');
+      
+      optionsList.innerHTML = '';
+      
+      currentOptions.forEach((option, index) => {
+        const optionItem = document.createElement('div');
+        optionItem.className = 'p-4 hover:bg-gray-50 transition-colors option-item';
+        optionItem.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">
+                ${index + 1}
+              </span>
+              <span class="text-dark font-medium">${option}</span>
+            </div>
+            <button onclick="removeOption('${option.replace(/'/g, "\\'")}')" class="text-red-500 hover:text-red-700 p-2 rounded-lg transition-colors">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+        optionsList.appendChild(optionItem);
+      });
+    }
+
+    // 添加选项
+    async function addOption() {
+      const input = document.getElementById('newOptionInput');
+      const optionText = input.value.trim();
+      
+      if (!optionText) {
+        alert('请输入选项内容~');
+        return;
+      }
+      
+      if (currentOptions.includes(optionText)) {
+        alert('这个选项已经存在啦~');
+        return;
+      }
+      
+      // 添加到本地列表
+      currentOptions.push(optionText);
+      input.value = '';
+      
+      // 保存到后端
+      await saveOptionsToBackend();
+      renderOptionsList();
+      
+      // 更新决策按钮状态
+      document.getElementById('startDecisionBtn').disabled = currentOptions.length < 2;
+      
+      // 显示成功提示
+      showTempMessage('选项添加成功！', 'success');
+    }
+
+    // 删除选项
+    async function removeOption(option) {
+      if (!confirm(`确定要删除"${option}"吗？`)) {
+        return;
+      }
+      
+      currentOptions = currentOptions.filter(opt => opt !== option);
+      await saveOptionsToBackend();
+      renderOptionsList();
+      
+      // 更新决策按钮状态
+      document.getElementById('startDecisionBtn').disabled = currentOptions.length < 2;
+      
+      showTempMessage('选项已删除', 'info');
+    }
+
+    // 清空所有选项
+    async function clearAllOptions() {
+      if (!currentOptions.length) {
+        alert('已经没有选项可以清空啦~');
+        return;
+      }
+      
+      if (!confirm('确定要清空所有选项吗？此操作不可撤销！')) {
+        return;
+      }
+      
+      currentOptions = [];
+      await saveOptionsToBackend();
+      renderOptionsList();
+      
+      // 更新决策按钮状态
+      document.getElementById('startDecisionBtn').disabled = true;
+      
+      showTempMessage('所有选项已清空', 'info');
+    }
+
+    // 保存选项到后端
+    async function saveOptionsToBackend() {
+      try {
+        const result = await updateOptions(selectedModule, currentOptions);
+        
+        if (result.status !== 'success') {
+          console.error('保存选项失败:', result.msg);
+          showTempMessage('保存失败，请重试', 'error');
+        }
+      } catch (error) {
+        console.error('保存选项错误:', error);
+        showTempMessage('网络错误，请检查连接', 'error');
+      }
+    }
+
+    // 临时消息提示
+    function showTempMessage(message, type = 'info') {
+      const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500', 
+        info: 'bg-blue-500',
+        warning: 'bg-yellow-500'
+      };
+      
+      const messageDiv = document.getElementById('tempMessage');
+      messageDiv.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-xl shadow-lg z-50 transition-transform transform translate-x-full`;
+      messageDiv.textContent = message;
+      messageDiv.classList.remove('hidden');
+      
+      // 动画显示
+      setTimeout(() => {
+        messageDiv.classList.remove('translate-x-full');
+      }, 100);
+      
+      // 3秒后消失
+      setTimeout(() => {
+        messageDiv.classList.add('translate-x-full');
+        setTimeout(() => {
+          messageDiv.classList.add('hidden');
+        }, 300);
+      }, 3000);
+    }
+
+    // ==================== 偏好设置功能 ====================
+
+    // 更新权重页面
+    async function updateWeightPage() {
+      if (selectedModule) {
+        document.getElementById('noModuleSelected').classList.add('hidden');
+        document.getElementById('weightAdjustmentForm').classList.remove('hidden');
+        
+        const moduleNames = { study: "学习纠结症", life: "干饭&生活", activity: "玩耍&活动" };
+        document.getElementById('currentModuleDisplay').textContent = moduleNames[selectedModule];
+        
+        await loadUserPreferences();
+      } else {
+        document.getElementById('noModuleSelected').classList.remove('hidden');
+        document.getElementById('weightAdjustmentForm').classList.add('hidden');
+      }
+    }
+
+    // 加载用户偏好
+    async function loadUserPreferences() {
+      const result = await getUserPreferences(selectedModule);
+      
+      if (result.status === 'success' && Object.keys(result.preferences).length > 0) {
+        // 转换后端返回的偏好数据格式
+        userWeights = {};
+        Object.keys(result.preferences).forEach(key => {
+          userWeights[key] = {
+            value: result.preferences[key],
+            label: getPreferenceLabel(key)
+          };
+        });
+      } else {
+        // 使用默认权重
+        userWeights = getDefaultWeights(selectedModule);
+      }
+      generateWeightSliders();
+    }
+
+    // 获取默认权重
+    function getDefaultWeights(module) {
+      const defaultWeights = {
+        study: {
+          course: { value: 30, label: '课程选择' },
+          selfStudy: { value: 30, label: '自习安排' },
+          academic: { value: 40, label: '参加活动' }
+        },
+        life: {
+          taste: { value: 40, label: '口味偏好' },
+          cost: { value: 30, label: '价格考虑' },
+          convenience: { value: 30, label: '便利程度' }
+        },
+        activity: {
+          fun: { value: 40, label: '趣味性' },
+          social: { value: 30, label: '社交性' },
+          health: { value: 30, label: '健康度' }
+        }
+      };
+      return defaultWeights[module] || defaultWeights.study;
+    }
+
+    // 获取偏好标签
+    function getPreferenceLabel(key) {
+      const labels = {
+        course: '课程选择',
+        selfStudy: '自习安排',
+        academic: '参加活动',
+        taste: '口味偏好',
+        cost: '价格考虑',
+        convenience: '便利程度',
+        fun: '趣味性',
+        social: '社交性',
+        health: '健康度',
+        efficiency: '效率优先',
+        comfort: '舒适优先'
+      };
+      return labels[key] || key;
+    }
+
+    // 生成权重滑块
+    function generateWeightSliders() {
+      const weightSliders = document.getElementById('weightSliders');
+      weightSliders.innerHTML = '';
+      let total = 0;
+      
+      Object.keys(userWeights).forEach(key => {
+        const value = userWeights[key].value;
+        const label = userWeights[key].label;
+        total += value;
+        
+        const sliderContainer = document.createElement('div');
+        sliderContainer.className = 'weight-slider';
+        sliderContainer.innerHTML = `
+          <div class="flex justify-between items-center mb-2">
+            <label class="text-gray-700 font-bold">${label}</label>
+            <span class="text-primary font-bold weight-value px-3 py-1 bg-primary/10 rounded-full" data-key="${key}">${value}%</span>
+          </div>
+          <input type="range" min="0" max="100" value="${value}" 
+                 class="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary"
+                 data-key="${key}">
+        `;
+        weightSliders.appendChild(sliderContainer);
+      });
+      
+      document.getElementById('totalWeight').textContent = total;
+      updateTotalWeightColor(total);
+      
+      document.querySelectorAll('.weight-slider input').forEach(slider => {
+        slider.addEventListener('input', updateWeightValues);
+      });
+    }
+
+    // 更新权重值
+    function updateWeightValues() {
+      const sliders = document.querySelectorAll('.weight-slider input');
+      let total = 0;
+      
+      sliders.forEach(slider => {
+        const key = slider.getAttribute('data-key');
+        const value = parseInt(slider.value);
+        userWeights[key].value = value;
+        document.querySelector(`.weight-value[data-key="${key}"]`).textContent = `${value}%`;
+        total += value;
+      });
+      
+      document.getElementById('totalWeight').textContent = total;
+      updateTotalWeightColor(total);
+    }
+
+    // 更新总权重颜色
+    function updateTotalWeightColor(total) {
+      const totalWeight = document.getElementById('totalWeight');
+      if (total !== 100) {
+        totalWeight.classList.add('text-red-500');
+        totalWeight.classList.remove('text-primary');
+      } else {
+        totalWeight.classList.remove('text-red-500');
+        totalWeight.classList.add('text-primary');
+      }
+    }
+
+    // ==================== 历史记录功能 ====================
+
+    // 显示未登录提示
+    function showNotLoggedIn() {
+      document.getElementById('notLoggedIn').classList.remove('hidden');
+      document.getElementById('noHistory').classList.add('hidden');
+      document.getElementById('historyList').classList.add('hidden');
+      document.getElementById('historyLoading').classList.add('hidden');
+    }
+
+    // 显示空历史提示
+    function showNoHistory() {
+      document.getElementById('notLoggedIn').classList.add('hidden');
+      document.getElementById('noHistory').classList.remove('hidden');
+      document.getElementById('historyList').classList.add('hidden');
+      document.getElementById('historyLoading').classList.add('hidden');
+    }
+
+    // 显示历史记录列表
+    function showHistoryList() {
+      document.getElementById('notLoggedIn').classList.add('hidden');
+      document.getElementById('noHistory').classList.add('hidden');
+      document.getElementById('historyList').classList.remove('hidden');
+      document.getElementById('historyLoading').classList.add('hidden');
+    }
+
+    // 显示加载状态
+    function showHistoryLoading() {
+      document.getElementById('notLoggedIn').classList.add('hidden');
+      document.getElementById('noHistory').classList.add('hidden');
+      document.getElementById('historyList').classList.add('hidden');
+      document.getElementById('historyLoading').classList.remove('hidden');
+    }
+
+    // 渲染历史记录
+    function renderHistory(history) {
+      const historyList = document.getElementById('historyList');
+      const filterValue = document.getElementById('historyFilter').value;
+      
+      // 筛选历史记录
+      let filteredHistory = history;
+      if (filterValue !== 'all') {
+        filteredHistory = history.filter(item => item.module_type === filterValue);
+      }
+      
+      if (filteredHistory.length === 0) {
+        showNoHistory();
+        return;
+      }
+      
+      // 按时间倒序排序
+      filteredHistory.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      
+      historyList.innerHTML = '';
+      
+      filteredHistory.forEach(item => {
+        const historyItem = createHistoryItem(item);
+        historyList.appendChild(historyItem);
+      });
+      
+      showHistoryList();
+    }
+
+    // 创建历史记录项
+    function createHistoryItem(item) {
+      const div = document.createElement('div');
+      div.className = 'p-4 hover:bg-gray-50 transition-colors';
+      
+      // 解析决策数据
+      let decisionData = {};
+      try {
+        decisionData = typeof item.decision_data === 'string' 
+          ? JSON.parse(item.decision_data) 
+          : item.decision_data;
+      } catch (e) {
+        decisionData = {
+          title: item.selected_option,
+          description: '这是你之前的选择',
+          tip: '继续使用纠结拜拜解决更多选择困难吧~',
+          image: 'https://picsum.photos/id/237/300/200',
+          category: getModuleDisplayName(item.module_type)
+        };
+      }
+      
+      const date = new Date(item.created_at);
+      const timeString = formatTime(date);
+      
+      div.innerHTML = `
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden">
+            <img src="${decisionData.image || 'https://picsum.photos/id/237/300/200'}" 
+                 alt="${decisionData.title}" 
+                 class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between mb-2">
+              <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-bold">
+                ${getModuleDisplayName(item.module_type)}
+              </span>
+              <span class="text-xs text-gray-500">${timeString}</span>
+            </div>
+            <h4 class="font-bold text-dark text-sm mb-1">${decisionData.title}</h4>
+            <p class="text-gray-600 text-xs mb-2 line-clamp-2">${decisionData.description}</p>
+            <div class="flex items-center text-xs text-gray-500">
+              <i class="fas fa-lightbulb text-yellow-500 mr-1"></i>
+              <span>${decisionData.tip}</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 flex space-x-2">
+          <button onclick="reuseDecision('${item.module_type}', '${item.selected_option}')" 
+                  class="text-xs bg-secondary hover:bg-secondary/90 text-white px-3 py-1 rounded-lg transition-all">
+            <i class="fas fa-redo mr-1"></i>再次使用
+          </button>
+          <button onclick="viewDecisionDetail(${JSON.stringify(decisionData).replace(/"/g, '&quot;')})" 
+                  class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-lg transition-all">
+            <i class="fas fa-eye mr-1"></i>查看详情
+          </button>
+        </div>
+      `;
+      
+      return div;
+    }
+
+    // 获取模块显示名称
+    function getModuleDisplayName(moduleType) {
+      const names = {
+        study: '学习纠结症',
+        life: '干饭&生活',
+        activity: '玩耍&活动',
+        general: '通用决策'
+      };
+      return names[moduleType] || moduleType;
+    }
+
+    // 格式化时间
+    function formatTime(date) {
+      const now = new Date();
+      const diff = now - date;
+      
+      if (diff < 60000) { // 1分钟内
+        return '刚刚';
+      } else if (diff < 3600000) { // 1小时内
+        return `${Math.floor(diff / 60000)}分钟前`;
+      } else if (diff < 86400000) { // 1天内
+        return `${Math.floor(diff / 3600000)}小时前`;
+      } else if (diff < 604800000) { // 1周内
+        return `${Math.floor(diff / 86400000)}天前`;
+      } else {
+        return `${date.getMonth() + 1}月${date.getDate()}日`;
+      }
+    }
+
+    // 再次使用决策
+    function reuseDecision(moduleType, option) {
+      selectedModule = moduleType;
+      
+      // 更新UI显示
+      const moduleNames = { study: "学习纠结症", life: "干饭&生活", activity: "玩耍&活动" };
+      alert(`已选择 ${moduleNames[moduleType]} 场景，选项 "${option}" 已准备好！`);
+      
+      // 导航到首页并启用决策按钮
+      navigateTo('home');
+      document.getElementById('startDecisionBtn').disabled = false;
+    }
+
+    // 查看决策详情
+    function viewDecisionDetail(decisionData) {
+      // 更新详情页面
+      document.getElementById('detailImage').src = decisionData.image || 'https://picsum.photos/id/237/300/200';
+      document.getElementById('detailImage').alt = decisionData.title;
+      document.getElementById('detailCategory').textContent = decisionData.category || '历史决策';
+      document.getElementById('detailTitle').textContent = decisionData.title;
+      document.getElementById('detailDescription').textContent = decisionData.description;
+      document.getElementById('detailTip').textContent = decisionData.tip;
+      
+      const now = new Date();
+      document.getElementById('detailDate').textContent = `${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+      
+      // 导航到详情页面
+      navigateTo('detailPage');
+    }
+
+    // 刷新历史记录
+    async function refreshHistory() {
+      await updateHistoryPage();
+    }
+
+    // 更新历史记录页面
+    async function updateHistoryPage() {
+      if (!isLoggedIn) {
+        showNotLoggedIn();
+        return;
+      }
+      
+      showHistoryLoading();
+      
+      try {
+        const history = await getUserHistory();
+        if (history.length > 0) {
+          renderHistory(history);
+        } else {
+          showNoHistory();
+        }
+      } catch (error) {
+        console.error('更新历史记录页面失败:', error);
+        showNoHistory();
+      }
+    }
+
+    // ==================== 详情页面功能 ====================
+
+    // 更新详情页
+    function updateDetailPage(result) {
+      const detail = result.detail;
+      
+      document.getElementById('detailImage').src = detail.image;
+      document.getElementById('detailImage').alt = detail.title;
+      document.getElementById('detailCategory').textContent = detail.category;
+      document.getElementById('detailTitle').textContent = detail.title;
+      document.getElementById('detailDescription').textContent = detail.description;
+      document.getElementById('detailTip').textContent = detail.tip;
+      
+      const now = new Date();
+      document.getElementById('detailDate').textContent = `${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+    }
+
+    // ==================== 事件监听器 ====================
+
+    // 导航按钮
+    document.querySelectorAll('.nav-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetPage = button.getAttribute('data-target');
+        if (targetPage) navigateTo(targetPage);
+      });
+    });
+
+    // 模块选择
+    document.querySelectorAll('.select-module-btn').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止事件冒泡
+        const card = button.closest('.module-card');
+        const module = card.getAttribute('data-module');
+        selectModule(module);
+      });
+    });
+
+    // 选项管理
+    document.getElementById('manageOptionsBtn').addEventListener('click', enterOptionsManagement);
+    document.getElementById('addOptionBtn').addEventListener('click', addOption);
+    document.getElementById('newOptionInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        addOption();
+      }
+    });
+    document.getElementById('clearAllOptions').addEventListener('click', clearAllOptions);
+
+    // 历史筛选器变化
+    document.getElementById('historyFilter').addEventListener('change', async () => {
+      if (isLoggedIn) {
+        const history = await getUserHistory();
+        renderHistory(history);
+      }
+    });
+
+    // 保存权重
+    document.getElementById('saveWeightsBtn').addEventListener('click', async () => {
+      const total = parseInt(document.getElementById('totalWeight').textContent);
+      
+      if (total !== 100) {
+        alert('哎呀，偏好总值要等于100才行哦~ 再调调吧！');
+        return;
+      }
+      
+      // 转换数据格式
+      const preferences = {};
+      Object.keys(userWeights).forEach(key => {
+        preferences[key] = userWeights[key].value;
+      });
+      
+      console.log('💾 准备保存偏好:', preferences);
+      
+      const result = await saveUserPreferences(selectedModule, preferences);
+      
+      if (result.status === 'success') {
+        document.getElementById('weightsSavedAlert').classList.remove('hidden');
+        setTimeout(() => document.getElementById('weightsSavedAlert').classList.add('hidden'), 3000);
+      } else {
+        alert('保存失败：' + result.msg);
+      }
+    });
+
+    // 启动决策
+    document.getElementById('startDecisionBtn').addEventListener('click', async () => {
+      if (!selectedModule) {
+        alert('先选个纠结的场景嘛~');
+        navigateTo('modules');
+        return;
+      }
+      
+      if (currentOptions.length < 2) {
+        alert('至少需要2个选项才能做决定哦~');
+        navigateTo('options');
+        return;
+      }
+      
+      document.getElementById('loadingModal').classList.remove('hidden');
+      
+      try {
+        const result = await makeDecision(selectedModule);
+        
+        if (result.status === 'success') {
+          updateDetailPage(result);
+          document.getElementById('loadingModal').classList.add('hidden');
+          navigateTo('detailPage');
+          // 决策成功后刷新历史记录
+          if (isLoggedIn) {
+            setTimeout(updateHistoryPage, 1000);
+          }
+        } else {
+          document.getElementById('loadingModal').classList.add('hidden');
+          alert('决策失败：' + result.msg);
+        }
+      } catch (error) {
+        document.getElementById('loadingModal').classList.add('hidden');
+        alert('网络错误，请检查后端服务是否运行');
+      }
+    });
+
+    // 再选一个
+    document.getElementById('anotherDecisionBtn').addEventListener('click', async () => {
+      document.getElementById('loadingModal').classList.remove('hidden');
+      
+      try {
+        const result = await makeDecision(selectedModule);
+        
+        if (result.status === 'success') {
+          updateDetailPage(result);
+          document.getElementById('loadingModal').classList.add('hidden');
+          // 决策成功后刷新历史记录
+          if (isLoggedIn) {
+            setTimeout(updateHistoryPage, 1000);
+          }
+        } else {
+          document.getElementById('loadingModal').classList.add('hidden');
+          alert('决策失败：' + result.msg);
+        }
+      } catch (error) {
+        document.getElementById('loadingModal').classList.add('hidden');
+        alert('网络错误');
+      }
+    });
+
+    // 分享按钮
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      alert('分享功能开发中~ 很快就能把你的纠结结果分享给朋友啦！');
+    });
+
+    // ==================== 初始化 ====================
+    window.addEventListener('DOMContentLoaded', async () => {
+      // 测试后端连接
+      await testBackendConnection();
+      
+      // 检查登录状态
+      await checkAuth();
+      
+      // 默认显示首页
+      navigateTo('home');
+      
+      console.log('🎉 前端初始化完成！');
+      console.log('👤 用户ID:', CURRENT_USER_ID);
+      console.log('🔗 后端地址:', API_BASE_URL);
+      console.log('🔐 登录状态:', isLoggedIn);
+    });
+
+    // 暴露函数到全局
+    window.showAuthModal = showAuthModal;
+    window.hideAuthModal = hideAuthModal;
+    window.showLoginForm = showLoginForm;
+    window.showRegisterForm = showRegisterForm;
+    window.login = login;
+    window.register = register;
+    window.logout = logout;
+    window.checkAuth = checkAuth;
+    window.testAllAPIs = testAllAPIs;
+    window.refreshHistory = refreshHistory;
+    window.reuseDecision = reuseDecision;
+    window.viewDecisionDetail = viewDecisionDetail;
+    window.removeOption = removeOption;
+  </script>
+</body>
+</html>
